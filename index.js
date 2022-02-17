@@ -1,3 +1,5 @@
+import { ApolloServer, gql } from 'apollo-server'
+
 const persons = [
   {
     name: "Frank",
@@ -27,3 +29,32 @@ const persons = [
     id: "28746490189373",
   },
 ];
+
+const typeDefs = gql`
+  type Person {
+    name: String!
+    phone: String
+    street: String!
+    city: String!
+    id: ID! 
+  }
+
+  type Query {
+    personCount: Int!
+    allPersons: [Person]!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    personCount: () => persons.length,
+    allPersons: () => persons
+  }
+}
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
+})
+
+server.listen().then(({ url }) => console.log(`Server up in port ${url}`))
